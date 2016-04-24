@@ -1,0 +1,52 @@
+import java.awt.RenderingHints.Key;
+import java.security.GeneralSecurityException;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
+import javax.crypto.spec.DESedeKeySpec;
+
+import org.apache.pdfbox.util.Hex;
+
+public class DESPrc {
+	
+	private static String src = "rdtsuiwoelfkgjhsdi09!@hudije&*(kdjwirodsfhgjiuweoq$%^tdr" ;
+	
+	/**
+	 * @param args
+	 * @throws Exception 
+	 */
+	public static void main(String[] args) throws Exception {
+		DESPrc.jdkDES();
+		
+
+	}
+	public static void jdkDES() throws Exception{
+		try {
+			//生成密钥
+			KeyGenerator keyGenerator = KeyGenerator.getInstance("DES");
+			keyGenerator.init(56);
+			SecretKey secretKey = keyGenerator.generateKey();
+			byte[] secretKeyByte = secretKey.getEncoded();
+			DESKeySpec key1 = new DESKeySpec(secretKeyByte);
+			SecretKeyFactory factory = SecretKeyFactory.getInstance("DES");
+			SecretKey key2 = factory.generateSecret(key1);
+			
+			//加密
+			Cipher cipher = Cipher.getInstance("DES");
+			cipher.init(Cipher.ENCRYPT_MODE, key2);
+			byte[] result = cipher.doFinal("src".getBytes());
+			System.out.println("The result of the encrypt is " + result);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+}
