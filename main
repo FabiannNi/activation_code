@@ -1,0 +1,25 @@
+import java.io.IOException;
+
+public class Verify {
+
+	/**
+	 * @param args
+	 * @throws IOException 
+	 */
+	public static void main(String[] args) throws IOException {
+		//提取mac地址、ip地址、CPU主板信息
+		String ip = Util.getIP();
+		String macAdress = Util.getMac(ip);
+		String CPUId = Util.getCPUInfo();
+		//根据mac、ip地址生成请求码
+		String askCode= Util.askCode(macAdress,CPUId);
+		
+				
+		
+		//将请求码加密
+		//请求码发送给服务器端
+		//服务器解码，数据库记录信息（CPU、MAC地址）
+		
+	}
+
+}
