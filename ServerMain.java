@@ -4,6 +4,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
+
 class Server extends WrapperSocket{
 	private ServerSocket server;
 	
@@ -36,6 +38,10 @@ public class ServerMain{
 	public static void main(String[] args) {
 			Server server = new Server(SERVER_PORT);
 			server.start();
+        Scanner sc =new Scanner(System.in);
+        while (sc.hasNext()){
+            server.send(sc.nextLine());
+        }
 	}
 
 }

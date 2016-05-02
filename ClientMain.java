@@ -35,7 +35,7 @@ public class ClientMain  {
 	public static void main(String[] args) {
 
 		Client client = new Client(SERVER_IP, SERVER_PORT);
-
+        client.start();
 		Scanner sc =new Scanner(System.in);
 		while (sc.hasNext()){
 			client.send(sc.nextLine());
