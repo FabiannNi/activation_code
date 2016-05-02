@@ -6,41 +6,40 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 class Client extends WrapperSocket{
-	private Socket server;
-	private PrintWriter out;
-	private BufferedReader in;
-	public  Client(){
+	private  Client(){
 	}
-	public Client(String SERVER_IP, int SERVER_PORT) throws IOException{
-		this.connect(SERVER_IP, SERVER_PORT);
+	public Client(String SERVER_IP, int SERVER_PORT){
+		try {
+			this.socket = new Socket(SERVER_IP,SERVER_PORT);
+			this.init();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
-	public void send(String sendMessage){
-		out.println(sendMessage);
-		out.flush();
+
+	@Override
+	public void receive(String str) {
+		System.out.println(str);
 	}
-	public void connect(String SERVER_IP, int SERVER_PORT) throws IOException{
-		this.socket = new Socket(SERVER_IP,SERVER_PORT);
-		this.out = new PrintWriter(server.getOutputStream());
-		this.in = new BufferedReader(new InputStreamReader(server.getInputStream()));
-	}	
+
 }
 public class ClientMain  {
-
+	private static String SERVER_IP = "localhost";
+	private static int SERVER_PORT = 3010;
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String SERVER_IP = "localhost";
-		int SERVER_PORT = 3000;		
-		Client client = new Client();
-		try {
-			client.connect(SERVER_IP,SERVER_PORT);
-		} catch (IOException e) {
-			e.printStackTrace();
+
+		Client client = new Client(SERVER_IP, SERVER_PORT);
+
+		Scanner sc =new Scanner(System.in);
+		while (sc.hasNext()){
+			client.send(sc.nextLine());
 		}
-		client.send(AskCode.encryptedAskCode);
 	}
 
 }
