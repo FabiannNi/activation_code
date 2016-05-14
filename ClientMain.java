@@ -1,45 +1,27 @@
-import java.io.BufferedReader;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.Scanner;
-
-class Client extends WrapperSocket{
-	private  Client(){
-	}
-	public Client(String SERVER_IP, int SERVER_PORT){
-		try {
-			this.socket = new Socket(SERVER_IP,SERVER_PORT);
-			this.init();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void receive(String str) {
-		System.out.println(str);
-	}
-
-}
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 public class ClientMain  {
-	private static String SERVER_IP = "localhost";
-	private static int SERVER_PORT = 3010;
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-
-		Client client = new Client(SERVER_IP, SERVER_PORT);
+    /**
+     * @param args
+     */
+    public static void main(String[] args) throws IOException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
+        String SERVER_IP = "localhost";
+        int SERVER_PORT = 3010;
+        //获取Mac地址和CPU信息来获得请求码
+        String macAddress = Util.getMacAddress();
+        String CPUId = Util.getCPUInfo();
+        String askcode = AskCode.getAskCode(macAddress,CPUId);
+        //建立客户端
+        Client client = new Client(SERVER_IP, SERVER_PORT);
         client.start();
-		Scanner sc =new Scanner(System.in);
-		while (sc.hasNext()){
-			client.send(sc.nextLine());
-		}
-	}
+        //加密请求码发送
+        Keys keys = new Keys();
+        keys.generateKey();
+        client.send(AskCode.encryptByPublicKey(askcode, keys.publicKey));
+    }
 
 }
